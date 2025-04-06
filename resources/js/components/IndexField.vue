@@ -4,6 +4,9 @@
 
 <script>
 export default {
-    props: ['resourceName', 'field'],
+    props: {
+        resourceName: String,
+        field: Object
+    }
 }
 </script>

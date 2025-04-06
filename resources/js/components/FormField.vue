@@ -1,6 +1,6 @@
 <template>
     <default-field :field="field">
-        <template slot="field">
+        <template #field>
             <date-range-picker
                 class="w-full form-control form-input form-input-bordered"
                 mode="sa"
@@ -23,12 +23,31 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import DateRangePicker from './DateRangePicker'
-import { FormField, HandlesValidationErrors, InteractsWithDates } from 'laravel-nova'
 
-export default {
-    mixins: [HandlesValidationErrors, FormField, InteractsWithDates],
-    components: { DateRangePicker },
+// Create your own HandlesValidationErrors mixin
+const HandlesValidationErrors = {
+    computed: {
+        hasError() {
+            return this.errors && this.errors.has(this.field.attribute)
+        },
+        firstError() {
+            return this.errors ? this.errors.first(this.field.attribute) : ''
+        },
+    }
+}
+
+export default defineComponent({
+    name: 'DateRangeField',
+
+    extends: FormField, // provided globally by Nova
+
+    mixins: [HandlesValidationErrors],
+
+    components: {
+        DateRangePicker,
+    },
 
     computed: {
         format() {
@@ -38,11 +57,11 @@ export default {
             return this.field.seperator
         },
         firstDayOfWeek() {
-            return this.field.firstDayOfWeek || 0;
-        },        
-        placeholder() {
-            return moment().format('YYYY-MM-DD') + ` ${this.field.seperator} ` + moment().format('YYYY-MM-DD')
+            return this.field.firstDayOfWeek || 0
         },
+        placeholder() {
+            return `${moment().format('YYYY-MM-DD')} ${this.field.seperator} ${moment().format('YYYY-MM-DD')}`
+        }
     },
-}
+})
 </script>

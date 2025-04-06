@@ -4,6 +4,11 @@
 
 <script>
 export default {
-    props: ['resource', 'resourceName', 'resourceId', 'field'],
+    props: {
+        resource: String,
+        resourceName: String,
+        resourceId: [String, Number],
+        field: Object,
+    },
 }
 </script>
